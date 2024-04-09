@@ -18,6 +18,10 @@ public class PostDao {
    @Autowired
    private SessionFactory sessionFactory;
    
+   public void setSessionFactory(SessionFactory sf){
+      this.sessionFactory=sf;
+   }
+
    @Transactional
    public void addPost(Post post){
     Session session=this.sessionFactory.getCurrentSession();

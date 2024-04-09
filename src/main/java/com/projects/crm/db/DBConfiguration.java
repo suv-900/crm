@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableTransactionManagement
 public class DBConfiguration {
-    
     @Value("${db.url}")
     String url;
 
@@ -31,13 +31,13 @@ public class DBConfiguration {
     @Value("${db.driver}")
     String driver;
 
-    @Value("${hibernate.packagesToScan}")
+    @Value("${entitymanager.packagesToScan}")
     String packagesToScan;
 
     @Value("${hibernate.dialect}") 
     String dialect;
 
-    @Value("${hibernate.hbm2ddl}")
+    @Value("${hibernate.hbm2ddl.auto}")
     String hbm2ddl;
 
     @Value("${hibernate.showSQL}")
@@ -51,7 +51,18 @@ public class DBConfiguration {
         dataSource.setUsername(username);
         dataSource.setPassword(password);
         dataSource.setDriverClassName(driver);
+
+        
         return dataSource;  
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+        LocalContainerEntityManagerFactoryBean factory=new LocalContainerEntityManagerFactoryBean();
+        factory.setBeanName("entityManagerFactory");
+        factory.setDataSource(dataSource());
+
+        return factory;
     }
 
     @Bean

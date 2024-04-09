@@ -18,6 +18,10 @@ public class AdminDao {
     @Autowired 
     private SessionFactory sessionFactory;   
     
+    public void setSessionFactory(SessionFactory sf){
+        this.sessionFactory=sf;
+    }
+
     @Transactional
     public void saveAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
