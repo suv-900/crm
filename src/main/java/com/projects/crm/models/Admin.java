@@ -10,19 +10,29 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity(name="admins")
-@Table
+@Table(name="admins")
 @Getter
 @Setter
 public class Admin {
     
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private int adminID;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="id")
+    private int id;
 
-    @Column(unique=true)
-    private String username;
+    @Column(name="name", unique=true)
+    private String name;
 
+    @Column(name="password")
     private String password;
     
-    private String email; 
+    @Column(name="email")
+    private String email;
+    
+    public Admin(){}
+
+    @Override
+    public String toString(){
+        return this.id+" "+this.name+" "+this.password+" "+this.email;
+    }
 }
