@@ -5,7 +5,8 @@
              version="2.0">
 
     <persistence-unit name="crm-persistence-unit">
-    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <class>com.projects.crm.models.Admin.java</class>
+    <class>com.projects.crm.models.Post.java</class>
     <properties>
         <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
         <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql:crm"/>

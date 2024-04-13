@@ -42,17 +42,22 @@ public class HibernateConfiguration {
     @Value("${spring.datasource.driver-class-name}")
     String driver;
 
-    @NotNull(message="configuration props:jpa.propeties.hbm2ddl.auto cannot be null")
-    @Value("${spring.jpa.properties.hbm2ddl.auto}")
-    String hbm2ddl;
-    
+   
     @NotNull(message="configuration props:entityManager.packagesToScan cannot be null")
-    @Value("entityManager.packagesToScan")
+    @Value("${entityManager.packagesToScan}")
     String packagesToScan;
-
+    
+    @NotNull(message="configuration props:jpa.propeties.hbm2ddl.auto cannot be null")
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    String ddlAuto;
+    
     @NotNull(message="configuration props:jpa.propeties.show_sql cannot be null")
-    @Value("${spring.jpa.properties.show_sql}")
+    @Value("${spring.jpa.show-sql}")
     String showSQL;
+
+    @NotNull(message="configuration props:jpa.propeties.generate-ddl cannot be null")
+    @Value("${spring.jpa.generate-ddl}")
+    String generateDDL;
 
     @Bean
     public DataSource dataSource(){
@@ -82,7 +87,8 @@ public class HibernateConfiguration {
         
         Properties hibernateProperties=new Properties();
         hibernateProperties.put("hibernate.show_sql",showSQL);
-        hibernateProperties.put("hibernate.hbm2ddl.auto",hbm2ddl);
+        hibernateProperties.put("hibernate.ddl-auto",ddlAuto);
+        hibernateProperties.put("hibernate.generate-ddl",generateDDL);
         sessionFactoryBean.setHibernateProperties(hibernateProperties);
         
         return sessionFactoryBean;
