@@ -4,6 +4,8 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,32 +17,41 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.constraints.NotNull;
 
-@Slf4j
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories
 public class HibernateConfiguration {
-    @Value("${db.url}")
+
+    private static final Logger log = LoggerFactory.getLogger(HibernateConfiguration.class);
+
+    @NotNull(message="configuration props:datasource.url cannot be null")
+    @Value("${spring.datasource.url}")
     String url;
 
-    @Value("${db.username}")
+    @NotNull(message="configuration props:datasource.username cannot be null")
+    @Value("${spring.datasource.username}")
     String username;
 
-    @Value("${db.password}")
+    @NotNull(message="configuration props:datasource.password cannot be null")
+    @Value("${spring.datasource.password}")
     String password;
 
-    @Value("${db.driver}")
+    @NotNull(message="configuration props:datasource.driver cannot be null")
+    @Value("${spring.datasource.driver-class-name}")
     String driver;
 
-    @Value("${entitymanager.packagesToScan}")
+    @NotNull(message="configuration props:jpa.propeties.hbm2ddl.auto cannot be null")
+    @Value("${spring.jpa.properties.hbm2ddl.auto}")
+    String hbm2ddl;
+    
+    @NotNull(message="configuration props:entityManager.packagesToScan cannot be null")
+    @Value("entityManager.packagesToScan")
     String packagesToScan;
 
-    @Value("${hibernate.hbm2ddl.auto}")
-    String hbm2ddl;
-
-    @Value("${hibernate.showSQL}")
+    @NotNull(message="configuration props:jpa.propeties.show_sql cannot be null")
+    @Value("${spring.jpa.properties.show_sql}")
     String showSQL;
 
     @Bean

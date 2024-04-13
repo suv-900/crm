@@ -24,10 +24,11 @@ public class AdminDao {
     }
 
     @Transactional
-    public void saveAdmin(Admin admin){
+    public Admin saveAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
         session.persist("admins",admin);
         log.info("Admin saved: "+admin.toString());
+        return admin;
     }
 
     @Transactional
@@ -35,6 +36,17 @@ public class AdminDao {
         Session session=this.sessionFactory.getCurrentSession();
         List<Admin> admins=session.createQuery("from admins", Admin.class).getResultList();
         return admins;
+    }
+
+    @Transactional
+    public Admin getAdminByID(int adminID)throws AdminNotFoundException{
+        Session session=this.sessionFactory.getCurrentSession();
+        Admin admin = session.get(Admin.class,adminID);
+        
+        if(admin == null){
+            throw new AdminNotFoundException("Admin doesnt exists");
+        }
+        return admin;
     }
 
     @Transactional
@@ -51,7 +63,7 @@ public class AdminDao {
     }
 
     @Transactional
-    public boolean loginAdmin(Admin admin)throws AdminNotFoundException,Exception{
+    public boolean loginAdmin(Admin admin)throws AdminNotFoundException{
         Session session = this.sessionFactory.getCurrentSession();
         String dbPassword= session.createQuery("select password from admins where name = :name",String.class)
                         .setParameter("name",admin.getName())

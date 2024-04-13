@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:if="${post.title}" th:text="${post.title}"></title>
+    </head>    
+    <body>
+        <h4 class="post-title" th:if="${post.title}" th:text="${post.title}"></h4>
+        
+        <div class="post-authors" th:each="author :${post.authors}">
+            <p class="author" th:text="${author.name}" ></p>
+        </div>
+
+        <p class="post-content" th:text="${post.content}"></p>
+    </body>
+</html>

@@ -15,10 +15,10 @@ public class AdminServiceImpl implements AdminService{
     @Autowired
     private AdminDao adminDao;   
     
-    public void addAdmin(Admin admin){
-        adminDao.saveAdmin(admin);        
+    public Admin addAdmin(Admin admin){
+        return adminDao.saveAdmin(admin);        
     }
-    public boolean loginAdmin(Admin admin)throws AdminNotFoundException,Exception{
+    public boolean loginAdmin(Admin admin)throws AdminNotFoundException{
         return adminDao.loginAdmin(admin);
     }
     public void deleteAdmin(Admin admin){
@@ -28,7 +28,9 @@ public class AdminServiceImpl implements AdminService{
     public List<Admin> getAllAdmins(){
         return adminDao.getAllAdmins();
     }
-
+    public Admin getAdminByID(int adminID)throws AdminNotFoundException{
+        return adminDao.getAdminByID(adminID);
+    }
     public void updateAdmin(Admin admin){
         adminDao.updateAdmin(admin);
     }
