@@ -21,26 +21,19 @@ public class Admin {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id")
-    private int id;
+    private long id;
 
-    
-    @Column(name="name", unique=true)
+    @Column(name="name", unique=true, nullable = false)
     @NotBlank(message="admin name cannot be blank.")
     private String name;
 
     @NotBlank(message="admin password cannot be blank")
     @Size(min=5,max=10,message="password should be between 5 - 10 characters")
-    @Column(name="password")
+    @Column(name="password",nullable = false)
     private String password;
     
     @Email(message="email should be valid.")
-    @Column(name="email")
+    @Column(name="email",nullable = false)
     private String email;
     
-    public Admin(){}
-
-    @Override
-    public String toString(){
-        return this.id+" "+this.name+" "+this.password+" "+this.email;
-    }
 }

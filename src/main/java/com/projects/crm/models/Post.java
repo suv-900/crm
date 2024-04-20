@@ -18,18 +18,14 @@ public class Post {
 
    @Id
    @GeneratedValue(strategy=GenerationType.IDENTITY)   
-   private int id;
+   private long id;
 
    @NotBlank(message="post title cannot be blank.")
-   @Column(name="post_title")
+   @Column(name="post_title",unique = true,nullable = false)
    private String postTitle;
    
    @NotBlank(message="post content cannot be blank.")
    @Column(name="post_content")
    private String postContent;
 
-   @Override
-   public String toString(){
-      return this.id+" "+this.postTitle+" "+this.postContent;
-   }
 }
