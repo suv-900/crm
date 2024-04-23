@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.projects.crm.exceptions.AdminNotFoundException;
-import com.projects.crm.models.Admin;
+import com.projects.crm.models.entitites.Admin;
 
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;

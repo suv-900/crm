@@ -26,14 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(AdminNotFoundException.class)
+    @ExceptionHandler({AdminNotFoundException.class,
+        PostNotFoundException.class})
     public void handleUserNotFoundException(AdminNotFoundException e){
     }
     
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(PostNotFoundException.class)
-    public void handlePostNotFoundException(PostNotFoundException e){
-    }
 
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -49,16 +46,14 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({Exception.class,NullPointerException.class})
+    @ExceptionHandler({Exception.class,
+        NullPointerException.class,
+        JWTCreationException.class
+    })
     public void handleServerErrors(Exception e){
         log.error(e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(JWTCreationException.class)
-    public void handleJWTCreationException(JWTCreationException e){
-        log.error(e.getMessage());
-    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -75,29 +70,12 @@ public class GlobalExceptionHandler {
         return errors;
     }
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ExceptionHandler({UnauthorizedAccessException.class,
+        JWTVerificationException.class,
+        MissingRequestHeaderException.class,
+        TokenExpiredException.class})
     public String handleUnauthorizedUserException(UnauthorizedAccessException e){
         log.error(e.getMessage());
         return e.getMessage();
     }
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(JWTVerificationException.class)
-    public String handleJWTVerificationException(JWTVerificationException e){
-        log.error(e.getMessage());
-        return "Token malformed";
-    }
-
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(TokenExpiredException.class)
-    public String handleTokenExpiredException(TokenExpiredException e){
-        log.error(e.getMessage());
-        return "Token expired";
-    }
-
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(MissingRequestHeaderException.class)
-    public String handleMissingHeaders(MissingRequestHeaderException e){
-        return "Missing header: "+e.getHeaderName();
-    }    
 }

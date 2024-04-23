@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.projects.crm.models.Admin;
+import com.projects.crm.models.entitites.Admin;
 
 @Repository
 public interface AdminRepository extends JpaRepository<Admin,Long>{

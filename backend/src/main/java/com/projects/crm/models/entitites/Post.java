@@ -1,4 +1,4 @@
-package com.projects.crm.models;
+package com.projects.crm.models.entitites;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

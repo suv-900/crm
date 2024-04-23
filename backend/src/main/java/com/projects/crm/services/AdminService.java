@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.projects.crm.exceptions.AdminNotFoundException;
-import com.projects.crm.models.Admin;
 import com.projects.crm.models.dto.AdminDTO;
+import com.projects.crm.models.entitites.Admin;
 import com.projects.crm.models.repository.AdminRepository;
 import com.projects.crm.services.AdminService;
 

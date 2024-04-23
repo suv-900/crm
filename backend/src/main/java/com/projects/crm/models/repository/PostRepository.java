@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.projects.crm.models.Post;
+import com.projects.crm.models.entitites.Post;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post,Long>{

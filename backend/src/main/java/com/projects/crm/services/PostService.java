@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.projects.crm.models.Post;
+import com.projects.crm.models.entitites.Post;
 import com.projects.crm.models.repository.PostRepository;
 import com.projects.crm.services.PostService;
 
@@ -15,19 +15,19 @@ public class PostService {
     @Autowired
     private PostRepository repository;    
 
-    public void addPost(Post post){
+    public void addPost(Post post)throws Exception{
         repository.save(post);
     }
 
-    public Post getPost(long postID){
+    public Post getPost(long postID)throws Exception{
         return repository.getReferenceById(postID);
     }
 
-    public List<Post> getAllPosts(){
+    public List<Post> getAllPosts()throws Exception{
         return repository.findAll();
     }
 
-    public Optional<Post> getPostById(long postID){
+    public Optional<Post> getPostById(long postID)throws Exception{
         return repository.findById(postID);
     }
 
@@ -35,11 +35,11 @@ public class PostService {
         repository.deleteAllById(idList);
     }
 
-    public Post updatePost(Post post){
+    public Post updatePost(Post post)throws Exception{
         return repository.save(post);
     }
 
-    public void deletePost(Post post){
+    public void deletePost(Post post)throws Exception{
         repository.delete(post);
     }
 
