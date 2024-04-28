@@ -7,78 +7,77 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projects.crm.dao.AdminDao;
 import com.projects.crm.exceptions.AdminNotFoundException;
 import com.projects.crm.models.dto.AdminDTO;
 import com.projects.crm.models.entitites.Admin;
-import com.projects.crm.models.repository.AdminRepository;
 import com.projects.crm.services.AdminService;
 
-import jakarta.transaction.Transactional;
 import lombok.NonNull;
 
 @Service
-@Transactional
 public class AdminService {
     @Autowired
-    private AdminRepository repository;   
-    
+    private AdminDao admindao;
+
     @Autowired
     private PasswordHasher hasher;
 
     public void addAdmin(Admin admin)throws Exception{
         String hashedPassword = hasher.hashPassword(admin.getPassword());
         admin.setPassword(hashedPassword);
-
-        repository.save(admin);
+        admindao.saveAdmin(admin);
     }
-    public boolean loginAdmin(String username,String password)throws AdminNotFoundException,Exception{
-        String dbPassword = repository.getPasswordByUsername(username);
-        
-        if(dbPassword == null){
-            throw new AdminNotFoundException("admin not found.");
+    
+    public Long loginAdmin(String name,String password)throws AdminNotFoundException,Exception{
+        Optional<Object[]> result = admindao.loginAdmin(name);    
+        if(result.isEmpty()){
+            throw new AdminNotFoundException();
         }
+        Object[] res = result.get();
+        Long adminID = (Long)res[0];
+        String dbPassword =(String)res[1];
 
-        return hasher.comparePassword(dbPassword,password);
+        hasher.comparePassword(dbPassword,password);
+        
+        return adminID;
     }
-    public void deleteAdmin(@NonNull Admin admin){
-        repository.delete(admin);
+    public void deleteAdmin( Admin admin){
+        admindao.deleteAdmin(admin);
     }
 
     public List<AdminDTO> getAllAdmins(){
-        List<Admin> adminList = repository.findAll();
-        List<AdminDTO> adminDTOList = new LinkedList<>();
+        List<AdminDTO> adminDTOs = new LinkedList<>();
+        
+        List<Admin> admins = admindao.getAllAdmins();
 
-        adminList.forEach((admin)->{
+        admins.forEach((admin)->{
             AdminDTO dto = new AdminDTO();
-            dto.setUsername(admin.getName());
+            dto.setName(admin.getName());
             dto.setEmail(admin.getEmail());
-            adminDTOList.add(dto);
+            adminDTOs.add(dto);
         });
-
-        return adminDTOList;
+        
+        return adminDTOs;
     }
-    public AdminDTO getAdminByID(long adminID)throws AdminNotFoundException{
-        Optional<Admin> adminEntity = repository.findById(adminID);
-
-        if(adminEntity.isEmpty()){
-            throw new AdminNotFoundException();
-        }
+   
+    public AdminDTO getAdminById(Long adminID){
+        Admin admin = admindao.getAdminByID(adminID);
         AdminDTO dto = new AdminDTO();
-        Admin admin = adminEntity.get();
-        dto.setUsername(admin.getName());
+        dto.setName(admin.getName());
         dto.setEmail(admin.getEmail());
-
         return dto;
     }
+
     public Admin updateAdmin(@NonNull Admin admin){
-        return repository.save(admin);
+        return admindao.updateAdmin(admin);
     }
 
-    public boolean adminExists(String username,String email){
-        return repository.adminExists(email,username);
+    public boolean adminExists(String name,String email){
+        return admindao.adminExists(name,email);
     }
 
     public Long getAdminCount(){
-        return repository.count();
+        return admindao.getCount();
     }
 }

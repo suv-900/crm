@@ -1,59 +1,72 @@
 package com.projects.crm.dao;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.projects.crm.config.HibernateConfig;
 import com.projects.crm.models.entitites.Post;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Repository
+@Transactional(rollbackOn=Exception.class)
 public class PostDao {
-   @Autowired
-   private SessionFactory sessionFactory;
-   
-   public void setSessionFactory(SessionFactory sf){
-      this.sessionFactory=sf;
-   }
+   private SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
 
-   @Transactional
    public void addPost(Post post){
-    Session session=this.sessionFactory.getCurrentSession();
+    Session session=sessionFactory.getCurrentSession();
     session.persist(post);
-    log.info("Post added: "+post);
+   }
+   
+   public Post getPostByID(Long postID){
+      Session session=sessionFactory.getCurrentSession();
+      return session.get(Post.class,postID);
    }
 
-   @Transactional
-   public Post getPost(int postID){
-    Session session=this.sessionFactory.getCurrentSession();
-    Post post=session.find(Post.class,postID);
-    return post;
+   public void deletePostById(Long postID){
+      Session session = sessionFactory.getCurrentSession();
+      Post post = session.get(Post.class,postID);
+      session.evict(post);
+      session.remove(post);
    }
-
-   @Transactional
-   public List<Post> getAllPosts(){
-    Session session=this.sessionFactory.getCurrentSession();
-    List<Post> posts=session.createQuery("from posts",Post.class).getResultList();
-    return posts;
-   }
-
-   @Transactional
+   
    public Post updatePost(Post post){
-    Session session=this.sessionFactory.getCurrentSession();
-    Post p=session.merge(post);
-    return p;
+    Session session=sessionFactory.getCurrentSession();
+    return session.merge(post);
    }
 
-   @Transactional 
    public void deletePost(Post post){
     Session session=this.sessionFactory.getCurrentSession();
     session.remove(post);
-    log.info("Post deleted: "+post);
+   }
+   
+   public List<Post> getAllPosts(){
+      Session session=sessionFactory.getCurrentSession();
+      return session.createQuery("from Post",Post.class).list();
+   }
+
+   public List<Post> getPostsByIds(List<Long> ids){
+      List<Post> postList = new LinkedList<>();
+      Session session = sessionFactory.getCurrentSession();
+      ids.forEach((id)->{
+         Post post = session.get(Post.class,id);
+         postList.add(post);
+      });
+
+      return postList;
+   }
+
+   public void deletePostByIds(List<Long> ids){
+      Session session = sessionFactory.getCurrentSession();
+      ids.forEach((id)->{
+         Post post = session.get(Post.class,id);
+         session.evict(post);
+         session.remove(post);
+      });
+
    }
 }

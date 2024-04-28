@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AdminDTO {
-    String username;
+    String name;
     String email;
 }

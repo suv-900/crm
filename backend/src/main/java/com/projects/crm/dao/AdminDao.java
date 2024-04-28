@@ -1,79 +1,70 @@
 package com.projects.crm.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.projects.crm.config.HibernateConfig;
 import com.projects.crm.exceptions.AdminNotFoundException;
 import com.projects.crm.models.entitites.Admin;
 
 import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Repository
+@Transactional(rollbackOn=Exception.class)
 public class AdminDao {
-    @Autowired 
-    private SessionFactory sessionFactory;   
     
-    public void setSessionFactory(SessionFactory sf){
-        this.sessionFactory=sf;
-    }
-
-    @Transactional
+    private SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
+    
     public Admin saveAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
         session.persist("admins",admin);
-        log.info("Admin saved: "+admin.toString());
         return admin;
     }
 
-    @Transactional
     public List<Admin> getAllAdmins(){
         Session session=this.sessionFactory.getCurrentSession();
-        List<Admin> admins=session.createQuery("from admins", Admin.class).getResultList();
-        return admins;
+        return session.createQuery("from Admin",Admin.class).list();
     }
 
-    @Transactional
-    public Admin getAdminByID(int adminID)throws AdminNotFoundException{
+    public Admin getAdminByID(Long adminID)throws AdminNotFoundException{
         Session session=this.sessionFactory.getCurrentSession();
-        Admin admin = session.get(Admin.class,adminID);
-        
-        if(admin == null){
-            throw new AdminNotFoundException("Admin doesnt exists");
-        }
-        return admin;
+        return session.get(Admin.class,adminID);
     }
 
-    @Transactional
     public void deleteAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
+        session.evict(admin);
         session.remove(admin);
-        log.info("Admin was removed: "+admin.toString());
     }
 
     public Admin updateAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
-        Admin updatedAdmin=session.merge(admin);
-        return updatedAdmin;
+        return session.merge(admin);
     }
 
-    @Transactional
-    public boolean loginAdmin(Admin admin)throws AdminNotFoundException{
-        Session session = this.sessionFactory.getCurrentSession();
-        String dbPassword= session.createQuery("select password from admins where name = :name",String.class)
-                        .setParameter("name",admin.getName())
-                        .uniqueResult();
-        log.info("Dbpassword: "+dbPassword); 
-        if(dbPassword != null){
-            return dbPassword.equals(admin.getPassword());
-        }else{
-            throw new AdminNotFoundException("Admin doesnt exists.Try creating a admin.");
-        }
+    public Optional<Object[]> loginAdmin(String name)throws AdminNotFoundException{
+        Session session = sessionFactory.getCurrentSession();
+        
+        Optional<Object[]> result = session.createQuery("select a.id,a.password from Admin where a.name = :name",Object[].class)
+            .setParameter("name",name)
+            .uniqueResultOptional();
+        return result;
+    }
 
+    public boolean adminExists(String name,String email){
+        Session session = sessionFactory.getCurrentSession();
+        Integer count = session.createQuery("select count(a) from Admin a where a.name = :name or a.email = :email",Integer.class)
+            .setParameter("name",name)
+            .setParameter("email",email)
+            .uniqueResult();
+        return count > 0;
+    }
+    public Long getCount(){
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("select count(a) from Admin",Long.class).uniqueResult();
     }
 }

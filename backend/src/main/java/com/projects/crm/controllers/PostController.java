@@ -1,7 +1,5 @@
 package com.projects.crm.controllers;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +23,7 @@ public class PostController {
     public Post getPostByID(@RequestParam("id")Long postID)
     throws PostNotFoundException,Exception
     {
-        Optional<Post> post = postService.getPostById(postID);
-        if(post.isEmpty()){
-            throw new PostNotFoundException();
-        }
-        return post.get(); 
+       return postService.getPostByID(postID); 
     }
     
 }

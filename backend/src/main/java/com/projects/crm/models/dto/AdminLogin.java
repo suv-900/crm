@@ -8,8 +8,8 @@ import lombok.Setter;
 @Setter
 public class AdminLogin {
     
-    @NotBlank(message = "username cannot be blank")
-    private String username;
+    @NotBlank(message = "name cannot be blank")
+    private String name;
 
     @NotBlank(message = "password cannot be blank")
     private String password;
