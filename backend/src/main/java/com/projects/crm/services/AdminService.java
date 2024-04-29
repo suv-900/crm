@@ -23,10 +23,10 @@ public class AdminService {
     @Autowired
     private PasswordHasher hasher;
 
-    public void addAdmin(Admin admin)throws Exception{
+    public Long addAdmin(Admin admin)throws Exception{
         String hashedPassword = hasher.hashPassword(admin.getPassword());
         admin.setPassword(hashedPassword);
-        admindao.saveAdmin(admin);
+        return admindao.saveAdmin(admin);
     }
     
     public Long loginAdmin(String name,String password)throws AdminNotFoundException,Exception{

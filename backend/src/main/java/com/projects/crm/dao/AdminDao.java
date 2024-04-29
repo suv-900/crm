@@ -19,10 +19,11 @@ public class AdminDao {
     
     private SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
     
-    public Admin saveAdmin(Admin admin){
+    public Long saveAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
         session.persist("admins",admin);
-        return admin;
+        session.flush();
+        return admin.getId();
     }
 
     public List<Admin> getAllAdmins(){

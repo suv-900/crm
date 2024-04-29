@@ -20,7 +20,7 @@ public class PostController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Post getPostByID(@RequestParam("id")Long postID)
+    public Post getPostByID(@RequestParam("postID")Long postID)
     throws PostNotFoundException,Exception
     {
        return postService.getPostByID(postID); 

@@ -22,6 +22,13 @@ public class PostDao {
     session.persist(post);
    }
    
+   public boolean postExistsByTitle(String title){
+      Session session = sessionFactory.getCurrentSession();
+      Integer count = session.createQuery("select count(p) from Post p where p.title = :title",Integer.class)
+         .setParameter("title",title)
+         .uniqueResult();
+      return count > 0;
+   }
    public Post getPostByID(Long postID){
       Session session=sessionFactory.getCurrentSession();
       return session.get(Post.class,postID);

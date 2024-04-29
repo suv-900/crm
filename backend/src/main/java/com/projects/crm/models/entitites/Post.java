@@ -1,5 +1,9 @@
 package com.projects.crm.models.entitites;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,18 +18,19 @@ import lombok.Setter;
 @Table(name="posts")
 @Getter
 @Setter
+@Cache(region="posts",usage=CacheConcurrencyStrategy.READ_ONLY)
+@Cacheable
 public class Post {
-
    @Id
    @GeneratedValue(strategy=GenerationType.IDENTITY)   
    private long id;
 
    @NotBlank(message="post title cannot be blank.")
-   @Column(name="post_title",unique = true,nullable = false)
-   private String postTitle;
+   @Column(unique = true,nullable = false)
+   private String title;
    
    @NotBlank(message="post content cannot be blank.")
-   @Column(name="post_content")
-   private String postContent;
+   @Column(nullable = false)
+   private String content;
 
 }

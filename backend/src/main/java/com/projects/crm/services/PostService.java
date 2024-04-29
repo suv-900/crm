@@ -27,10 +27,17 @@ public class PostService {
         return post;
     }
 
+    public boolean postExistsByTitle(String title){
+        return postdao.postExistsByTitle(title);
+    }
+
     public Post updatePost(Post post)throws Exception{
         return postdao.updatePost(post);
     }
 
+    public List<Post> getAllPosts()throws Exception{
+        return postdao.getAllPosts();
+    }
     public void deletePost(Post post)throws Exception{
         postdao.deletePost(post);
     }

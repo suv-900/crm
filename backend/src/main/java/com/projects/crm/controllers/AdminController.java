@@ -19,6 +19,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.projects.crm.exceptions.AdminExistsException;
 import com.projects.crm.exceptions.AdminNotFoundException;
+import com.projects.crm.exceptions.PostExistsException;
 import com.projects.crm.exceptions.UnauthorizedAccessException;
 import com.projects.crm.models.dto.AdminDTO;
 import com.projects.crm.models.dto.AdminLogin;
@@ -52,9 +53,9 @@ public class AdminController {
             throw new AdminExistsException();
         }
 
-        adminService.addAdmin(admin);
+        Long adminID = adminService.addAdmin(admin);
         
-        String token = tokenService.generateToken(admin.getName());
+        String token = tokenService.generateToken(adminID);
         response.addHeader("Token",token);
 
     }
@@ -64,13 +65,9 @@ public class AdminController {
     public void loginAdmin(@Valid @RequestBody AdminLogin admin,HttpServletResponse response)
     throws AdminNotFoundException,UnauthorizedAccessException,Exception 
     {
-       boolean isOK = adminService.loginAdmin(admin.getUsername(),admin.getPassword());
-       
-       if(!isOK){
-        throw new UnauthorizedAccessException("Credentials dont match"); 
-       }
+       Long adminID = adminService.loginAdmin(admin.getName(),admin.getPassword());
 
-       String token = tokenService.generateToken(admin.getUsername());
+       String token = tokenService.generateToken(adminID);
        response.addHeader("Token",token);
     }
 
@@ -93,12 +90,14 @@ public class AdminController {
         adminService.deleteAdmin(admin);     
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping("/update")
     public void updateAdmin(@RequestBody Admin admin,@RequestHeader(value = "Token",required=true)String token)
     throws JWTVerificationException,TokenExpiredException,Exception
     {
-        String username = tokenService.extractUsername(token); 
-        admin.setName(username);
+        String s = tokenService.extractID(token);
+        Long adminID = Long.parseLong(s); 
+        admin.setId(adminID);
 
         adminService.updateAdmin(admin);
     }
@@ -110,9 +109,13 @@ public class AdminController {
     {
         tokenService.verifyToken(token);
         
+        if(postService.postExistsByTitle(post.getTitle())){
+            throw new PostExistsException("post exists with title: "+post.getTitle());
+        }
         postService.addPost(post);
     } 
     
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping("/posts/update/{id}")
     public Post updatePost(@RequestHeader(value="Token",required=true)String token,@RequestBody Post post,@RequestParam("id")Long postID)
     throws JWTVerificationException,TokenExpiredException,Exception
@@ -122,12 +125,13 @@ public class AdminController {
         return postService.updatePost(post);
     }
     
-    @PostMapping("/posts/delete/{id}")
-    public void deletePost(@RequestHeader(value="Token",required=true)String token,@RequestParam("id")Long postID)
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/posts/delete/{id}")
+    public void deletePost(@RequestHeader(value="Token",required=true)String token,@RequestParam("postID")Long postID)
     throws JWTVerificationException,TokenExpiredException,Exception
     {
         tokenService.verifyToken(token);
-        postService.deletePostById(postID);
+        postService.deletePostByID(postID);
     }
 
     @ResponseStatus(HttpStatus.OK)

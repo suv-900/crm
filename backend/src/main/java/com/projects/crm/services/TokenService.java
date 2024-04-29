@@ -25,18 +25,18 @@ public class TokenService {
         verifier = JWT.require(algorithm).build();
     }
 
-    public String generateToken(String username)throws JWTCreationException,Exception{
+    public String generateToken(Long id)throws JWTCreationException,Exception{
         return JWT.create()
             .withIssuer("crm-admin")
-            .withClaim("username",username)
+            .withClaim("ID",id)
             .withIssuedAt(new Date())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
             .sign(algorithm);
     }
 
-    public String extractUsername(String token)throws JWTVerificationException,TokenExpiredException,AlgorithmMismatchException{
+    public String extractID(String token)throws JWTVerificationException,TokenExpiredException,AlgorithmMismatchException{
         return verifier.verify(token)
-            .getClaim("username")
+            .getClaim("ID")
             .toString();
     }
 
