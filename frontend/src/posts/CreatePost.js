@@ -58,8 +58,8 @@ export default function CreatePost(){
     return (
         <div>
             <form id="form">
-                <input id="titleInput" type="text" />
-                <input id="contentInput" type="text" />
+                <input id="titleInput" type="text" class="post-title-input"/>
+                <input id="contentInput" type="text" class="post-content-input"/>
                 <button id="create-button"  type="button" onClick={()=>{createPost()}}>update</button>
             </form>
             <div id="outputDiv"></div>

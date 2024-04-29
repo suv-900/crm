@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import com.projects.crm.config.HibernateConfig;
-import com.projects.crm.models.entitites.Post;
+import com.projects.crm.models.entities.Post;
 
 import jakarta.transaction.Transactional;
 

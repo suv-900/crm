@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.projects.crm.dao.PostDao;
 import com.projects.crm.exceptions.PostNotFoundException;
-import com.projects.crm.models.entitites.Post;
+import com.projects.crm.models.entities.Post;
 import com.projects.crm.services.PostService;
 
 @Service

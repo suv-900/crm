@@ -5,11 +5,11 @@ export default function AdminRegister(){
     async function registerUser(){
             const outputDiv=document.getElementById("outputDiv");
             const form=document.getElementById("registerForm");
-            const username=form.elements[0].value;
+            const name=form.elements[0].value;
             const email=form.elements[1].value;
             const password=form.elements[2].value;
 
-            if(username.length === 0 || password.length === 0 || email.length === 0){
+            if(name.length === 0 || password.length === 0 || email.length === 0){
                 outputDiv.innerHTML="Missing fields";
                 return;
             }
@@ -21,12 +21,13 @@ export default function AdminRegister(){
                 return;
             }
             
-            const reqBody=JSON.stringify({username,email,password});
+            const reqBody=JSON.stringify({name,email,password});
             console.log(reqBody);
-
+            const reqHeaders = {"Content-Type":"application/json"}
             const response=await fetch("http://localhost:8080/admin/register",{
                 method:"POST",
-                body:reqBody
+                body:reqBody,
+                headers:reqHeaders
             })
             const responseText=await response.text();
             

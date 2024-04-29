@@ -1,9 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
 
 export default function Feed(){
-
     useEffect(()=>{
        fetchPosts(); 
     },[])
@@ -20,9 +18,9 @@ export default function Feed(){
         for(let i = 0;i<resJSON.size();i++){
             const post = resJSON[i];
             
-            const postDiv = document.createElement("div");
-            postDiv.className = "post";
-            postDiv.innerHTML = <Link to={`/post/${post.id}`} >{post.title}</Link> 
+            const postDiv = document.createElement("a");
+            postDiv.className = "post-link";
+            postDiv.href = `http://localhost:3000/viewpost?id=${post.id}` 
            
             postListDiv.appendChild(postDiv);
         }

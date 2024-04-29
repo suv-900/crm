@@ -1,4 +1,5 @@
 import LinkedList from "../utils/LinkedList";
+import { useEffect, useState } from "react";
 
 export default function ViewAllPosts(){
     const[token,setToken] = useState(null);
@@ -54,7 +55,10 @@ export default function ViewAllPosts(){
             const deleteButton = document.createElement("button");
             updateButton.innerText = "update";
             deleteButton.innerText = "delete"; 
-            updateButton.onClick = ()=>{};
+            updateButton.onClick = ()=>{
+                console.log("update button clicked")
+                window.location = `/update_post?postID=${postID}`
+            };
             deleteButton.onClick = ()=>{deletePost(postID,post,i)}; 
             
             postDiv.appendChild(titleLink);

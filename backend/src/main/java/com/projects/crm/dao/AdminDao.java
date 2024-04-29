@@ -5,14 +5,17 @@ import java.util.Optional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import com.projects.crm.config.HibernateConfig;
 import com.projects.crm.exceptions.AdminNotFoundException;
-import com.projects.crm.models.entitites.Admin;
+import com.projects.crm.models.entities.Admin;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Repository
 @Transactional(rollbackOn=Exception.class)
 public class AdminDao {
@@ -21,7 +24,7 @@ public class AdminDao {
     
     public Long saveAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
-        session.persist("admins",admin);
+        session.persist(admin);
         session.flush();
         return admin.getId();
     }
@@ -58,14 +61,29 @@ public class AdminDao {
 
     public boolean adminExists(String name,String email){
         Session session = sessionFactory.getCurrentSession();
-        Integer count = session.createQuery("select count(a) from Admin a where a.name = :name or a.email = :email",Integer.class)
+        Transaction tx = null;
+
+        try{
+            tx = session.beginTransaction();
+            tx.setTimeout(10); 
+            Integer count = session.createQuery("SELECT COUNT(*) FROM Admin WHERE name = :name OR email = :email",Integer.class)
             .setParameter("name",name)
             .setParameter("email",email)
             .uniqueResult();
-        return count > 0;
+
+            tx.commit();
+
+            return count > 0;
+        }catch(RuntimeException e){
+            log.error("DAO: "+e.getMessage());
+            if(tx != null) tx.rollback();
+            throw e;
+        }finally{
+            session.close();
+        }
     }
     public Long getCount(){
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("select count(a) from Admin",Long.class).uniqueResult();
+        return session.createQuery("select count(*) from Admin",Long.class).uniqueResult();
     }
 }

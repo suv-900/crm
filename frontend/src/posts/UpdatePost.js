@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function UpdatePost(){
     const[params,setParams] = useSearchParams();
@@ -39,11 +39,9 @@ export default function UpdatePost(){
 
         let postTitle = resJSON.title;
         let postContent = resJSON.content;
-        let postCreatedAt = resJSON.createdat;
 
         const titleInput = document.getElementById("titleInput");
         const contentInput = document.getElementById("contentInput");
-        const createdatInput = document.getElementById("createdatInput");
         titleInput.innerHTML = postTitle;
         contentInput.innerHTML = postContent;
         // createdatInput.innerHTML = postCreatedAt;
@@ -58,7 +56,7 @@ export default function UpdatePost(){
         const postContent = updateForm.elements[1].value;
 
         if(empty(postTitle) || empty(postContent)){
-            const outputDiv = document.getElementById(outputDiv);
+            const outputDiv = document.getElementById("outputDiv");
             outputDiv.innerHTML = "Bad fields";
             return;
         }

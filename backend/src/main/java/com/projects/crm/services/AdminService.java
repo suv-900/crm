@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.projects.crm.dao.AdminDao;
 import com.projects.crm.exceptions.AdminNotFoundException;
 import com.projects.crm.models.dto.AdminDTO;
-import com.projects.crm.models.entitites.Admin;
+import com.projects.crm.models.entities.Admin;
 import com.projects.crm.services.AdminService;
 
 import lombok.NonNull;

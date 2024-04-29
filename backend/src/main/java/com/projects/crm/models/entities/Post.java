@@ -1,4 +1,4 @@
-package com.projects.crm.models.entitites;
+package com.projects.crm.models.entities;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="posts")
+@Table
 @Getter
 @Setter
 @Cache(region="posts",usage=CacheConcurrencyStrategy.READ_ONLY)

@@ -1,4 +1,4 @@
-package com.projects.crm.models.entitites;
+package com.projects.crm.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="admins")
+@Table
 @Getter
 @Setter
 public class Admin {
@@ -23,17 +23,17 @@ public class Admin {
     @Column(name="id")
     private long id;
 
-    @Column(name="name", unique=true, nullable = false)
+    @Column(unique=true, nullable = false)
     @NotBlank(message="admin name cannot be blank.")
     private String name;
 
     @NotBlank(message="admin password cannot be blank")
     @Size(min=5,max=10,message="password should be between 5 - 10 characters")
-    @Column(name="password",nullable = false)
+    @Column(nullable = false)
     private String password;
     
     @Email(message="email should be valid.")
-    @Column(name="email",nullable = false)
+    @Column(nullable = false)
     private String email;
     
 }
