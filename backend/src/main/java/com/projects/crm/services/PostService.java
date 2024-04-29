@@ -26,7 +26,9 @@ public class PostService {
         }
         return post;
     }
-
+    public List<Post> getFeedPosts(int offset)throws RuntimeException,Exception{
+        return postdao.getFeedPosts(offset);
+    }
     public boolean postExistsByTitle(String title){
         return postdao.postExistsByTitle(title);
     }

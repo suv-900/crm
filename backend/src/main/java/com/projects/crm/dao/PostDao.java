@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import com.projects.crm.config.HibernateConfig;
@@ -75,5 +76,25 @@ public class PostDao {
          session.remove(post);
       });
 
+   }
+
+   public List<Post> getFeedPosts(int offset)throws Exception{
+      Session session = sessionFactory.getCurrentSession();
+      Transaction tx = null;
+      List<Post> posts = null;
+      try{
+         tx = session.beginTransaction();
+         posts = session.createQuery("FROM Post",Post.class)
+            .setFirstResult(offset)
+            .setMaxResults(5)
+            .list();
+         tx.commit();
+      }catch(RuntimeException e){
+         if(tx != null)tx.rollback();
+         throw e;
+      }finally{
+         session.close();
+      }
+      return posts;
    }
 }
