@@ -11,8 +11,8 @@
         <property name = "hibernate.connection.password">12345678</property>
     </properties>
     <exclude-unlisted-classes>true</exclude-unlisted-classes> 
-    <class>com.projects.crm.models.entities.Admin</class>
-    <class>com.projects.crm.models.entities.Post</class>
+    <class>com.projects.crm.models.entities.Admin.class</class>
+    <class>com.projects.crm.models.entities.Post.class</class>
   
   </persistence-unit>
 </persistence>

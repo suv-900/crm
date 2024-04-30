@@ -19,7 +19,9 @@
 
         <property name = "hibernate.generate_statistics">true</property>
         <property name = "hibernate.cache.use_structured_entries">true</property>
-        <!-- <class-cache class="com.project.evm.models.entities.Event" usage="read-only"/> -->
+    
+        <mapping class = "com.projects.crm.models.entities.Admin"/>
+        <mapping class = "com.projects.crm.models.entities.Post"/>
 
     </session-factory>
 

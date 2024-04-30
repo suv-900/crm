@@ -1,5 +1,7 @@
 package com.projects.crm.models.entities;
 
+import java.sql.Date;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -33,4 +35,5 @@ public class Post {
    @Column(nullable = false)
    private String content;
 
+   private Date createdat;
 }

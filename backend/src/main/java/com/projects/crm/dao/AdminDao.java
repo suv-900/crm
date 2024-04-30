@@ -11,22 +11,52 @@ import org.springframework.stereotype.Repository;
 import com.projects.crm.config.HibernateConfig;
 import com.projects.crm.exceptions.AdminNotFoundException;
 import com.projects.crm.models.entities.Admin;
+import com.projects.crm.utils.HandleErrors;
 
-import jakarta.transaction.Transactional;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Repository
-@Transactional(rollbackOn=Exception.class)
 public class AdminDao {
-    
+    private HandleErrors errors = new HandleErrors();    
     private SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
     
-    public Long saveAdmin(Admin admin){
+    public void saveAdmin(Admin admin){
         Session session=this.sessionFactory.getCurrentSession();
-        session.persist(admin);
-        session.flush();
-        return admin.getId();
+        Transaction tx = null;
+        try{
+            tx = session.beginTransaction();
+
+            session.persist(admin);
+            tx.commit();
+        }catch(RuntimeException e){
+            if(tx != null) tx.rollback();
+            errors.print(e);
+            throw e;
+        }finally{
+            session.close();
+        }
+    }
+
+    public Long getIdentifier(Admin admin){
+        Session session = sessionFactory.getCurrentSession();
+        Transaction tx = null;
+        Long id = null;
+        try{
+            tx = session.beginTransaction();
+
+            id = session.createQuery("select id from Admin where name = :name and email = :email",Long.class)
+                .setParameter("name",admin.getName())
+                .setParameter("email",admin.getEmail())
+                .uniqueResult();
+
+            tx.commit();
+        }catch(RuntimeException e){
+            if(tx != null) tx.rollback();
+            errors.print(e);
+            
+            throw e;
+        }finally{
+            session.close();
+        }
+        return id;
     }
 
     public List<Admin> getAllAdmins(){
@@ -59,28 +89,29 @@ public class AdminDao {
         return result;
     }
 
-    public boolean adminExists(String name,String email){
+    public boolean adminExists(String name,String email)throws Exception{
         Session session = sessionFactory.getCurrentSession();
         Transaction tx = null;
-
+        Long count = null;
         try{
             tx = session.beginTransaction();
             tx.setTimeout(10); 
-            Integer count = session.createQuery("SELECT COUNT(*) FROM Admin WHERE name = :name OR email = :email",Integer.class)
+            count = session.createQuery("SELECT COUNT(*) FROM Admin WHERE name = :name OR email = :email",Long.class)
             .setParameter("name",name)
             .setParameter("email",email)
             .uniqueResult();
 
             tx.commit();
-
-            return count > 0;
         }catch(RuntimeException e){
-            log.error("DAO: "+e.getMessage());
             if(tx != null) tx.rollback();
+            errors.print(e);
             throw e;
         }finally{
             session.close();
         }
+        if(count == null) throw new Exception("Count=null is returned by the query");
+        
+        return count > 0;
     }
     public Long getCount(){
         Session session = sessionFactory.getCurrentSession();

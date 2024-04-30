@@ -1,5 +1,7 @@
 package com.projects.crm.models.entities;
 
+import java.sql.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,10 +19,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Admin {
-    
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id")
     private long id;
 
     @Column(unique=true, nullable = false)
@@ -35,5 +35,7 @@ public class Admin {
     @Email(message="email should be valid.")
     @Column(nullable = false)
     private String email;
+
+    private Date createdat;
     
 }

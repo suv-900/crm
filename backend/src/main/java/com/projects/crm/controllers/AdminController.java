@@ -67,8 +67,11 @@ public class AdminController {
             throw new AdminExistsException();
         }
 
-        Long adminID = adminService.addAdmin(admin);
-        
+        adminService.addAdmin(admin);
+        Long adminID = adminService.getIdentifier(admin);
+        if(adminID == null){
+            throw new Exception("ID(payload) is null.Shouldnt be null.");
+        } 
         String token = tokenService.generateToken(adminID);
         response.addHeader("Token",token);
 
@@ -190,8 +193,8 @@ public class AdminController {
         NullPointerException.class,
         JWTCreationException.class
     })
-    public void handleServerErrors(Exception e){
-        log.error(e.getMessage());
+    public String handleServerErrors(Exception e){
+        return e.getMessage();
     }
 
 
